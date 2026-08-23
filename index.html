@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Sales Call — MY NAGHI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F0E2;
+    --card:#FFFFFF;
+    --ink:#26263E;
+    --muted:#8A8CA3;
+    --line:#E8E8EE;
+    --purple:#8B5CF6;
+    --purple-soft:#F1EBFE;
+    --black:#1B1B1F;
+    --gray-pill:#EDEDF1;
+    --bad:#C4322E;
+    --footer:#F3F3F6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    background:#EFEFF2; color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start;
+    padding:28px 14px;
+  }
+  html[dir="rtl"] body{font-family:'IBM Plex Sans Arabic','Plus Jakarta Sans',system-ui,sans-serif}
+  html[dir="rtl"] .eyebrow, html[dir="rtl"] .sub, html[dir="rtl"] .foot,
+  html[dir="rtl"] label, html[dir="rtl"] .date .dw{letter-spacing:0}
+  .card{
+    background:var(--card); border-radius:24px; width:100%; max-width:560px;
+    overflow:hidden; box-shadow:0 8px 40px rgba(38,38,62,.10);
+    display:flex; flex-direction:column;
+  }
+  /* ---------- cream header ---------- */
+  .head{background:var(--cream); padding:24px 26px 20px}
+  .head .top{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px}
+  .eyebrow{font-size:.72rem; font-weight:700; letter-spacing:.22em; color:var(--ink)}
+  .head h1{font-size:1.62rem; font-weight:800; letter-spacing:-.01em; margin-bottom:8px}
+  .head .sub{font-size:1rem; color:var(--muted); letter-spacing:.02em}
+  .headrow{display:flex; justify-content:space-between; align-items:center; margin-top:16px}
+  .langs{display:flex; gap:8px}
+  .lang{
+    font-family:inherit; cursor:pointer; border:none; border-radius:14px;
+    padding:12px 20px; font-size:.95rem; font-weight:600;
+    background:var(--gray-pill); color:var(--ink); transition:background .15s,color .15s;
+  }
+  .lang.on{background:var(--black); color:#fff}
+  .lang[data-l="ar"]{font-family:'IBM Plex Sans Arabic',sans-serif}
+  .dots{display:flex; gap:6px; align-items:center}
+  .dot{width:8px; height:8px; border-radius:99px; background:#DAD3F2; transition:all .25s}
+  .dot.on{width:26px; background:var(--purple)}
+  /* ---------- body ---------- */
+  .body{padding:22px 26px 28px; flex:1}
+  .row{
+    display:flex; align-items:center; gap:16px;
+    border:1px solid var(--line); border-radius:16px; padding:12px 14px; margin-bottom:10px;
+  }
+  .tile{
+    flex:none; width:52px; height:52px; border-radius:14px; background:var(--cream);
+    display:flex; align-items:center; justify-content:center; color:var(--purple);
+  }
+  .row .txt{font-size:1rem; font-weight:600}
+  .row .txt small{display:block; font-weight:500; font-size:.82rem; color:var(--muted); letter-spacing:.02em; margin-top:2px}
+  html[dir="rtl"] .row .txt small{letter-spacing:0}
+  .label{font-size:.95rem; font-weight:700; margin:20px 0 12px}
+  .label span{font-weight:500; color:var(--muted)}
+  /* date strip */
+  .dates{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; scrollbar-width:none}
+  .dates::-webkit-scrollbar{display:none}
+  .date{
+    flex:none; min-width:66px; padding:12px 6px; text-align:center; cursor:pointer;
+    border:1px solid var(--line); border-radius:16px; background:var(--card);
+    font-family:inherit; transition:border-color .15s, background .15s;
+  }
+  .date .dw{font-size:.68rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  .date .dn{font-size:1.2rem; font-weight:800; margin:3px 0 1px}
+  .date .dm{font-size:.7rem; font-weight:500; color:var(--muted)}
+  .date:disabled{opacity:.35; cursor:not-allowed}
+  .date.sel{border-color:var(--purple); background:var(--purple-soft)}
+  .date.sel .dw,.date.sel .dm{color:var(--purple)}
+  /* slots */
+  .slots{display:grid; grid-template-columns:repeat(auto-fill,minmax(102px,1fr)); gap:8px}
+  .slot{
+    padding:12px 0; border:1px solid var(--line); border-radius:14px; background:var(--card);
+    font-family:inherit; font-size:.92rem; font-weight:600; cursor:pointer; color:var(--ink);
+    transition:border-color .15s, background .15s, color .15s;
+  }
+  .slot.sel{border-color:var(--purple); background:var(--purple); color:#fff}
+  .empty{color:var(--muted); font-size:.92rem; padding:18px 2px}
+  /* form */
+  form{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .field{display:flex; flex-direction:column; gap:7px}
+  label{font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+  input{
+    font-family:inherit; font-size:1rem; font-weight:500; color:var(--ink);
+    padding:13px 14px; border:1px solid var(--line); border-radius:14px; background:var(--card);
+  }
+  input:focus{outline:2px solid var(--purple); outline-offset:1px; border-color:var(--purple)}
+  .actions{grid-column:1/-1; display:flex; gap:10px; align-items:center; margin-top:8px}
+  .btn{
+    font-family:inherit; font-size:.95rem; font-weight:700; cursor:pointer;
+    border:none; border-radius:99px; padding:14px 28px;
+  }
+  .btn-primary{background:var(--black); color:#fff}
+  .btn-primary:disabled{opacity:.5; cursor:wait}
+  .btn-ghost{background:var(--gray-pill); color:var(--ink)}
+  /* confirmation */
+  .done{text-align:center; padding:34px 10px 20px}
+  .done .tile{width:64px; height:64px; margin:0 auto 18px; border-radius:18px}
+  .done h2{font-size:1.4rem; font-weight:800; margin-bottom:8px}
+  .done p{color:var(--muted); font-size:.98rem; line-height:1.7; max-width:400px; margin:0 auto 22px}
+  .meetlink{
+    display:inline-block; background:var(--purple); color:#fff; text-decoration:none;
+    font-weight:700; padding:14px 30px; border-radius:99px;
+  }
+  .note{margin-top:16px; font-size:.85rem; color:var(--muted)}
+  /* footer */
+  .foot{
+    background:var(--footer); text-align:center; padding:14px;
+    font-size:.9rem; color:#B4B6C6; letter-spacing:.04em;
+  }
+  .error{color:var(--bad); font-size:.9rem; font-weight:600; margin-top:12px}
+  .loading{color:var(--muted); font-size:.92rem; padding:26px 0; text-align:center}
+  .hidden{display:none}
+  @media(max-width:560px){
+    body{padding:0}
+    .card{border-radius:0; min-height:100vh; max-width:none}
+    .head{padding:20px 20px 18px}
+    .body{padding:20px 20px 30px}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <header class="head">
+    <div class="top">
+      <span class="eyebrow">MY NAGHI</span>
+      <span class="dots"><span class="dot on" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></span>
+    </div>
+    <h1 id="headTitle"></h1>
+    <div class="sub" id="headSub"></div>
+    <div class="headrow">
+      <div class="langs">
+        <button type="button" class="lang" data-l="ar" id="btnAr">العربية</button>
+        <button type="button" class="lang on" data-l="en" id="btnEn">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="body">
+    <!-- STEP 1 -->
+    <section id="stepPick">
+      <div class="row">
+        <div class="tile">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="m21.5 8-6 4 6 4V8Z"/></svg>
+        </div>
+        <div class="txt"><span id="repName">…</span><small id="metaLine"></small></div>
+      </div>
+
+      <div class="label" id="lblDate"></div>
+      <div class="dates" id="dates"><div class="loading" id="loadingTxt"></div></div>
+
+      <div id="slotArea" class="hidden">
+        <div class="label"><span id="lblTime" style="font-weight:700;color:var(--ink)"></span> <span id="tzLabel"></span></div>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div class="error hidden" id="pickError"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="stepForm" class="hidden">
+      <form id="form" novalidate>
+        <div class="field"><label for="fn" id="lFn"></label><input id="fn" autocomplete="given-name" required></div>
+        <div class="field"><label for="ln" id="lLn"></label><input id="ln" autocomplete="family-name" required></div>
+        <div class="field"><label for="ph" id="lPh"></label><input id="ph" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="em" id="lEm"></label><input id="em" type="email" autocomplete="email" required></div>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="backBtn"></button>
+          <button type="submit" class="btn btn-primary" id="submitBtn"></button>
+        </div>
+      </form>
+      <div class="error hidden" id="formError"></div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="stepDone" class="done hidden">
+      <div class="tile">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 id="doneTitle"></h2>
+      <p id="doneText"></p>
+      <a class="meetlink" id="meetLink" target="_blank" rel="noopener"></a>
+      <p class="note" id="doneNote"></p>
+    </section>
+
+    <section id="fatal" class="done hidden">
+      <h2 id="fatalTitle"></h2>
+      <p id="fatalText"></p>
+    </section>
+  </div>
+
+  <div class="foot" id="footTxt"></div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — paste your Apps Script Web App URL here after deploy
+   ============================================================ */
+const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbyt7kZilBnqrKvup_iMujYWYyZczKgoNCqxsMqTnEcCjAsKK3kdjOpjGRq_7IsYLAjT/exec’;
+
+/* ----------------------------- i18n ------------------------ */
+const T = {
+  en: {
+    title:'Book a sales call', sub:'Pick a time that works best for you',
+    detailsTitle:'Your details', doneHead:'All set', doneSub:'We look forward to speaking with you',
+    callWith:'Call with', meta:m=>m+'-minute video call · Google Meet',
+    lblDate:'Choose a date', lblTime:'Choose a time', tz:'· Saudi Arabia time',
+    loading:'Loading availability…',
+    empty:n=>'No times available in the next '+n+' days. Please contact your representative directly.',
+    fn:'First name', ln:'Last name', ph:'Phone number', em:'Email',
+    back:'Back', confirm:'Confirm booking', booking:'Booking…',
+    doneTitle:'Your call is booked',
+    doneText:(m,r,w)=>'Your '+m+'-minute call with '+r+' is confirmed for '+w+'.',
+    meet:'Open Google Meet link',
+    doneNote:'A calendar invitation with this link has also been sent to your email.',
+    foot:'Your booking goes directly to the NAGHI team',
+    fatalTitle:'Scheduling unavailable',
+    errFields:'Please fill in all fields.', errEmail:'Please enter a valid email address.',
+    errNet:'Could not reach the scheduling service. Please try again.',
+    errLink:'This link is missing a representative code. Please use the link your sales representative sent you.',
+    locale:'en-GB'
+  },
+  ar: {
+    title:'احجز مكالمة مبيعات', sub:'اختر الوقت الأنسب لك',
+    detailsTitle:'بياناتك', doneHead:'تم بنجاح', doneSub:'نتطلع للتحدث معك',
+    callWith:'مكالمة مع', meta:m=>'مكالمة فيديو لمدة '+m+' دقيقة · Google Meet',
+    lblDate:'اختر التاريخ', lblTime:'اختر الوقت', tz:'· بتوقيت السعودية',
+    loading:'جارٍ تحميل المواعيد…',
+    empty:n=>'لا توجد مواعيد متاحة خلال الـ '+n+' يومًا القادمة. يرجى التواصل مع مندوب المبيعات مباشرة.',
+    fn:'الاسم الأول', ln:'اسم العائلة', ph:'رقم الجوال', em:'البريد الإلكتروني',
+    back:'رجوع', confirm:'تأكيد الحجز', booking:'جارٍ الحجز…',
+    doneTitle:'تم حجز مكالمتك',
+    doneText:(m,r,w)=>'مكالمتك لمدة '+m+' دقيقة مع '+r+' مؤكدة يوم '+w+'.',
+    meet:'فتح رابط Google Meet',
+    doneNote:'تم أيضًا إرسال دعوة التقويم مع هذا الرابط إلى بريدك الإلكتروني.',
+    foot:'حجزك يصل مباشرة إلى فريق NAGHI',
+    fatalTitle:'الحجز غير متاح حاليًا',
+    errFields:'يرجى تعبئة جميع الحقول.', errEmail:'يرجى إدخال بريد إلكتروني صحيح.',
+    errNet:'تعذر الوصول إلى خدمة الحجز. يرجى المحاولة مرة أخرى.',
+    errLink:'هذا الرابط لا يحتوي على رمز المندوب. يرجى استخدام الرابط الذي أرسله لك مندوب المبيعات.',
+    locale:'ar-SA'
+  }
+};
+
+const rep = new URLSearchParams(location.search).get('rep') || '';
+let lang = (new URLSearchParams(location.search).get('lang') === 'ar') ? 'ar' : 'en';
+let DATA = null, selDate = null, selSlot = null, step = 1, fatalMsg = null, booked = null;
+
+const $ = id => document.getElementById(id);
+const show = (id, on=true) => $(id).classList.toggle('hidden', !on);
+const t = () => T[lang];
+
+function fmtDate(iso, opts){
+  return new Intl.DateTimeFormat(t().locale + '-u-nu-latn',
+    Object.assign({ timeZone: (DATA && DATA.timezone) || 'Asia/Riyadh' }, opts)).format(new Date(iso));
+}
+
+function setStep(n){
+  step = n;
+  ['d1','d2','d3'].forEach((id,i) => $(id).classList.toggle('on', i === n-1));
+}
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  $('btnAr').classList.toggle('on', lang === 'ar');
+  $('btnEn').classList.toggle('on', lang === 'en');
+  const x = t();
+  $('lblDate').textContent = x.lblDate;
+  $('lblTime').textContent = x.lblTime;
+  $('tzLabel').textContent = x.tz;
+  $('loadingTxt') && ($('loadingTxt').textContent = x.loading);
+  $('lFn').textContent = x.fn; $('lLn').textContent = x.ln;
+  $('lPh').textContent = x.ph; $('lEm').textContent = x.em;
+  $('backBtn').textContent = x.back;
+  $('submitBtn').textContent = x.confirm;
+  $('meetLink').textContent = x.meet;
+  $('doneTitle').textContent = x.doneTitle;
+  $('doneNote').textContent = x.doneNote;
+  $('footTxt').textContent = x.foot;
+  $('fatalTitle').textContent = x.fatalTitle;
+  if (DATA){
+    $('repName').textContent = x.callWith + ' ' + DATA.repName;
+    $('metaLine').textContent = x.meta(DATA.slotMinutes);
+    renderDates();
+    if (selDate !== null) renderSlots();
+  }
+  refreshHead();
+  if (fatalMsg) $('fatalText').textContent = fatalMsg[lang] || fatalMsg.en;
+  if (booked) $('doneText').textContent =
+    x.doneText(DATA.slotMinutes, DATA.repName,
+      fmtDate(booked, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'}));
+}
+
+function refreshHead(){
+  const x = t();
+  if (step === 1){ $('headTitle').textContent = x.title; $('headSub').textContent = x.sub; }
+  else if (step === 2){
+    $('headTitle').textContent = x.detailsTitle;
+    $('headSub').textContent = selSlot
+      ? fmtDate(selSlot.iso, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'})
+      : x.sub;
+  } else { $('headTitle').textContent = x.doneHead; $('headSub').textContent = x.doneSub; }
+}
+
+$('btnAr').onclick = () => { lang = 'ar'; applyLang(); };
+$('btnEn').onclick = () => { lang = 'en'; applyLang(); };
+
+function fatal(msgEn, msgAr){
+  fatalMsg = { en: msgEn, ar: msgAr || msgEn };
+  show('stepPick', false); show('stepForm', false); show('stepDone', false);
+  $('fatalText').textContent = fatalMsg[lang]; show('fatal', true);
+}
+
+async function load(){
+  if(!rep) return fatal(T.en.errLink, T.ar.errLink);
+  try{
+    const r = await fetch(SCRIPT_URL + '?action=availability&rep=' + encodeURIComponent(rep));
+    const d = await r.json();
+    if(!d.ok) return fatal(d.error || T.en.errNet, T.ar.errNet);
+    DATA = d;
+    applyLang();
+  }catch(e){
+    fatal(T.en.errNet, T.ar.errNet);
+  }
+}
+
+function renderDates(){
+  const wrap = $('dates'); wrap.innerHTML = '';
+  DATA.days.forEach((day, i) => {
+    const b = document.createElement('button');
+    b.className = 'date' + (i === selDate ? ' sel' : ''); b.type = 'button';
+    b.disabled = day.slots.length === 0;
+    const iso = day.date + 'T12:00:00';
+    b.innerHTML =
+      '<div class="dw">' + fmtDate(iso, {weekday:'short'}) + '</div>' +
+      '<div class="dn">' + fmtDate(iso, {day:'numeric'}) + '</div>' +
+      '<div class="dm">' + fmtDate(iso, {month:'short'}) + '</div>';
+    b.onclick = () => { selDate = i; selSlot = null; renderDates(); renderSlots(); };
+    wrap.appendChild(b);
+  });
+  if(!DATA.days.some(d => d.slots.length)){
+    wrap.innerHTML = '<div class="empty">' + t().empty(DATA.days.length) + '</div>';
+  }
+}
+
+function renderSlots(){
+  const wrap = $('slots'); wrap.innerHTML = '';
+  DATA.days[selDate].slots.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'slot' + (selSlot && selSlot.iso === s.iso ? ' sel' : ''); b.type = 'button';
+    b.textContent = fmtDate(s.iso, {hour:'numeric', minute:'2-digit'});
+    b.onclick = () => {
+      selSlot = s;
+      setStep(2); refreshHead();
+      show('stepPick', false); show('stepForm', true);
+      $('fn').focus();
+    };
+    wrap.appendChild(b);
+  });
+  show('slotArea', true);
+}
+
+$('backBtn').onclick = () => {
+  show('stepForm', false); show('stepPick', true);
+  setStep(1); refreshHead();
+};
+
+$('form').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const x = t();
+  const fn = $('fn').value.trim(), ln = $('ln').value.trim(),
+        ph = $('ph').value.trim(), em = $('em').value.trim();
+  const err = $('formError');
+  err.classList.add('hidden');
+  if(!fn || !ln || !ph || !em){ err.textContent = x.errFields; err.classList.remove('hidden'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.textContent = x.errEmail; err.classList.remove('hidden'); return; }
+
+  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = x.booking;
+  try{
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST',
+      body: JSON.stringify({ rep, start: selSlot.iso, firstName: fn, lastName: ln, phone: ph, email: em })
+    });
+    const d = await r.json();
+    if(!d.ok){
+      err.textContent = d.error || x.errNet;
+      err.classList.remove('hidden');
+      btn.disabled = false; btn.textContent = x.confirm;
+      if(/just booked/i.test(d.error||'')){
+        show('stepForm', false); show('stepPick', true); setStep(1); refreshHead(); load();
+      }
+      return;
+    }
+    booked = d.start;
+    setStep(3); refreshHead();
+    $('doneText').textContent = x.doneText(DATA.slotMinutes, DATA.repName,
+      fmtDate(booked, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'}));
+    if(d.meetLink){ $('meetLink').href = d.meetLink; } else { $('meetLink').style.display = 'none'; }
+    show('stepForm', false); show('stepDone', true);
+  }catch(e){
+    err.textContent = x.errNet;
+    err.classList.remove('hidden');
+    btn.disabled = false; btn.textContent = x.confirm;
+  }
+};
+
+applyLang();
+load();
+</script>
+</body>
+</html>
