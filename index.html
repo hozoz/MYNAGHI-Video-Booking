@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Sales Call — MY NAGHI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F0E2;
+    --card:#FFFFFF;
+    --ink:#26263E;
+    --muted:#8A8CA3;
+    --line:#E8E8EE;
+    --purple:#8B5CF6;
+    --purple-soft:#F1EBFE;
+    --black:#1B1B1F;
+    --gray-pill:#EDEDF1;
+    --bad:#C4322E;
+    --orange:#F97316;
+    --footer:#F3F3F6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    background:#EFEFF2; color:var(--ink);
+    min-height:100vh; display:flex; justify-content:center; align-items:flex-start;
+    padding:28px 14px;
+  }
+  html[dir="rtl"] body{font-family:'IBM Plex Sans Arabic','Plus Jakarta Sans',system-ui,sans-serif}
+  html[dir="rtl"] .sub, html[dir="rtl"] label, html[dir="rtl"] .date .dw{letter-spacing:0}
+  .card{
+    background:var(--card); border-radius:24px; width:100%; max-width:560px;
+    overflow:hidden; box-shadow:0 8px 40px rgba(38,38,62,.10);
+    display:flex; flex-direction:column;
+  }
+  /* ---------- cream header ---------- */
+  .head{background:var(--cream); padding:24px 26px 20px; min-height:186px; display:flex; flex-direction:column; justify-content:flex-start}
+  .head .top{display:flex; justify-content:flex-end; align-items:center; margin-bottom:14px; min-height:10px}
+  .head h1{font-size:1.62rem; font-weight:800; letter-spacing:-.01em; margin-bottom:8px; min-height:1.3em}
+  .head .sub{font-size:1rem; color:var(--muted); letter-spacing:.02em; min-height:1.5em}
+  .headrow{display:flex; justify-content:space-between; align-items:center; margin-top:16px}
+  .langs{display:flex; gap:8px}
+  .lang{
+    font-family:inherit; cursor:pointer; border:none; border-radius:14px;
+    padding:12px 20px; font-size:.95rem; font-weight:600;
+    background:var(--gray-pill); color:var(--ink); transition:background .15s,color .15s;
+  }
+  .lang.on{background:var(--black); color:#fff}
+  .lang[data-l="ar"]{font-family:'IBM Plex Sans Arabic',sans-serif}
+  .dots{display:flex; gap:6px; align-items:center}
+  .dot{width:8px; height:8px; border-radius:99px; background:#DAD3F2; transition:all .25s}
+  .dot.on{width:26px; background:var(--purple)}
+  /* ---------- body ---------- */
+  .body{padding:22px 26px 28px; flex:1; min-height:470px}
+  .row{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:4px 2px 10px; margin-bottom:6px;
+  }
+  .avatar{flex:none; width:58px; height:58px; border-radius:50%; object-fit:cover}
+  .row .txt{font-size:1rem; font-weight:600}
+  .row .txt small{display:block; font-weight:500; font-size:.82rem; color:var(--muted); letter-spacing:.02em; margin-top:2px}
+  html[dir="rtl"] .row .txt small{letter-spacing:0}
+  .label{font-size:.95rem; font-weight:700; margin:20px 0 12px}
+  .label span{font-weight:500; color:var(--muted)}
+  /* date strip */
+  .dates{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; scrollbar-width:none}
+  .dates::-webkit-scrollbar{display:none}
+  .date{
+    flex:none; min-width:66px; padding:12px 6px; text-align:center; cursor:pointer;
+    border:1px solid var(--line); border-radius:12px; background:var(--card);
+    font-family:inherit; transition:border-color .15s, background .15s;
+  }
+  .date .dw{font-size:.68rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+  .date .dn{font-size:1.2rem; font-weight:800; margin:3px 0 1px; color:var(--ink)}
+  .date .dm{font-size:.7rem; font-weight:500; color:var(--muted)}
+  .date:disabled{opacity:.35; cursor:not-allowed}
+  .date.sel{border-color:var(--ink); background:var(--gray-pill)}
+  .date.sel .dw,.date.sel .dm,.date.sel .dn{color:var(--ink)}
+  /* time picker */
+  .timewrap{position:relative}
+  .timewrap select{
+    width:100%; font-family:inherit; font-size:1rem; font-weight:500; color:var(--ink);
+    padding:16px 48px 16px 16px; border:1px solid var(--line); border-radius:12px;
+    background:var(--card); cursor:pointer;
+    -webkit-appearance:none; appearance:none;
+  }
+  html[dir="rtl"] .timewrap select{padding:16px 16px 16px 48px}
+  .timewrap select:focus{outline:2px solid var(--purple); outline-offset:1px; border-color:var(--purple)}
+  .timewrap::after{
+    content:''; position:absolute; top:50%; inset-inline-end:18px;
+    width:10px; height:10px; margin-top:-8px; pointer-events:none;
+    border-right:2px solid var(--muted); border-bottom:2px solid var(--muted);
+    transform:rotate(45deg);
+  }
+  .empty{color:var(--muted); font-size:.92rem; padding:18px 2px}
+  /* form — floating labels */
+  form{display:grid; grid-template-columns:1fr 1fr; gap:30px 28px}
+  .field{position:relative; padding-top:20px}
+  .field.wide{grid-column:1/-1}
+  input{
+    width:100%; font-family:inherit; font-size:1.1rem; font-weight:400; color:var(--ink);
+    padding:10px 0 12px; border:none; border-bottom:1px solid var(--line); border-radius:0;
+    background:transparent;
+  }
+  input:focus{outline:none; border-bottom:2px solid var(--ink); padding-bottom:11px}
+  label{
+    position:absolute; inset-inline-start:0; top:30px;
+    font-size:1.1rem; font-weight:400; color:var(--muted);
+    pointer-events:none; transition:top .18s ease, font-size .18s ease, color .18s ease;
+  }
+  input:focus ~ label, input:not(:placeholder-shown) ~ label{
+    top:0; font-size:.82rem; color:var(--muted);
+  }
+  .actions{grid-column:1/-1; display:flex; gap:10px; align-items:center; margin-top:8px}
+  .btn{
+    font-family:inherit; font-size:1rem; font-weight:600; cursor:pointer;
+    border:1px solid var(--line); border-radius:12px; padding:16px 26px;
+  }
+  .btn-primary{background:var(--orange); border-color:var(--orange); color:#fff; flex:1}
+  .btn-primary:disabled{opacity:.5; cursor:wait}
+  .btn-ghost{background:var(--gray-pill); border-color:var(--gray-pill); color:var(--ink)}
+  /* confirmation */
+  .done{text-align:center; padding:34px 10px 20px}
+  .done h2{font-size:1.4rem; font-weight:800; margin-bottom:8px}
+  .done p{color:var(--muted); font-size:.98rem; line-height:1.7; max-width:400px; margin:0 auto 22px}
+  /* party animation */
+  .party{position:relative; width:110px; height:110px; margin:0 auto 14px}
+  .party .pop{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:58px;
+    animation:pop .55s cubic-bezier(.2,1.6,.4,1) both, bob 2.4s ease-in-out 1.3s infinite;
+  }
+  @keyframes pop{0%{transform:scale(0) rotate(-40deg)} 65%{transform:scale(1.3) rotate(10deg)} 100%{transform:scale(1) rotate(0deg)}}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-9px) rotate(-6deg)}}
+  .party i{
+    position:absolute; top:50%; left:50%; width:10px; height:10px; border-radius:2px; opacity:0;
+    animation:burst 1s cubic-bezier(.1,.8,.4,1) .12s forwards;
+  }
+  .party i:nth-child(odd){border-radius:50%; width:8px; height:8px}
+  @keyframes burst{
+    0%{transform:translate(-50%,-50%) scale(.4) rotate(0deg); opacity:1}
+    70%{opacity:1}
+    100%{transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--rot)); opacity:0}
+  }
+  @media(prefers-reduced-motion:reduce){.party i{display:none}.party .pop{animation:none}}
+  .calbtn{
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--line); border-radius:12px; background:var(--card);
+    color:var(--ink); text-decoration:none; font-weight:600; font-size:.95rem;
+    padding:13px 20px;
+  }
+  .calbtn svg{color:var(--orange); flex:none}
+  .note{margin-top:16px; font-size:.85rem; color:var(--muted)}
+  .error{color:var(--bad); font-size:.9rem; font-weight:600; margin-top:12px}
+  .loading{color:var(--muted); font-size:.92rem; padding:26px 0; text-align:center}
+  .hidden{display:none}
+  @media(max-width:560px){
+    body{padding:0}
+    .card{border-radius:0; min-height:100vh; max-width:none}
+    .head{padding:20px 20px 18px}
+    .body{padding:20px 20px 30px}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <header class="head">
+    <div class="top">
+      <span class="dots"><span class="dot on" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></span>
+    </div>
+    <h1 id="headTitle">Book a sales call</h1>
+    <div class="sub" id="headSub">Pick a time that works best for you</div>
+    <div class="headrow">
+      <div class="langs">
+        <button type="button" class="lang" data-l="ar" id="btnAr">العربية</button>
+        <button type="button" class="lang on" data-l="en" id="btnEn">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="body">
+    <!-- STEP 1 -->
+    <section id="stepPick">
+      <div class="row">
+        <div class="txt"><span id="repName">Loading…</span><small id="metaLine">15-minute video call · Google Meet</small></div>
+        <img class="avatar" id="repPhoto" alt="">
+      </div>
+
+      <div class="label" id="lblDate">Choose a date</div>
+      <div class="dates" id="dates"><div class="loading" id="loadingTxt">Loading availability…</div></div>
+
+      <div id="slotArea" class="hidden">
+        <div class="label"><span id="lblTime" style="font-weight:700;color:var(--ink)"></span></div>
+        <div class="timewrap"><select id="timeSel"></select></div>
+      </div>
+      <div class="error hidden" id="pickError"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="stepForm" class="hidden">
+      <form id="form" novalidate>
+        <div class="field"><input id="fn" placeholder=" " autocomplete="given-name" required><label for="fn" id="lFn">First name</label></div>
+        <div class="field"><input id="ln" placeholder=" " autocomplete="family-name" required><label for="ln" id="lLn">Last name</label></div>
+        <div class="field wide"><input id="ph" placeholder=" " type="tel" autocomplete="tel" required><label for="ph" id="lPh">Phone number</label></div>
+        <div class="field wide"><input id="em" placeholder=" " type="email" autocomplete="email" required><label for="em" id="lEm">Email</label></div>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="backBtn">Back</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Confirm booking</button>
+        </div>
+      </form>
+      <div class="error hidden" id="formError"></div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="stepDone" class="done hidden">
+      <div class="party">
+        <i style="--dx:-78px;--dy:-64px;--rot:220deg;background:#F97316"></i>
+        <i style="--dx:66px;--dy:-78px;--rot:-190deg;background:#8B5CF6"></i>
+        <i style="--dx:-92px;--dy:6px;--rot:160deg;background:#FFC24B"></i>
+        <i style="--dx:90px;--dy:-8px;--rot:-240deg;background:#34C77B"></i>
+        <i style="--dx:-58px;--dy:70px;--rot:300deg;background:#F471B5"></i>
+        <i style="--dx:70px;--dy:62px;--rot:-160deg;background:#F97316"></i>
+        <i style="--dx:-20px;--dy:-92px;--rot:120deg;background:#34C77B"></i>
+        <i style="--dx:24px;--dy:88px;--rot:-130deg;background:#8B5CF6"></i>
+        <i style="--dx:-96px;--dy:-30px;--rot:210deg;background:#F471B5"></i>
+        <i style="--dx:98px;--dy:32px;--rot:-200deg;background:#FFC24B"></i>
+        <i style="--dx:-36px;--dy:84px;--rot:170deg;background:#1B1B1F"></i>
+        <i style="--dx:40px;--dy:-86px;--rot:-140deg;background:#1B1B1F"></i>
+        <span class="pop">🎉</span>
+      </div>
+      <h2 id="doneTitle">Your call is booked</h2>
+      <p id="doneText"></p>
+      <a class="calbtn" id="calBtn" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        <span id="calTxt">Add to Google Calendar</span>
+      </a>
+      <p class="note" id="doneNote">A calendar invitation with this link has also been sent to your email.</p>
+    </section>
+
+    <section id="fatal" class="done hidden">
+      <h2 id="fatalTitle">Scheduling unavailable</h2>
+      <p id="fatalText"></p>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — paste your Apps Script Web App URL here after deploy
+   ============================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfK5eb1BcJpOQd9sRcXVYFLIE2olKr-MOxG_5DSHOoeNV81M1nbqndmlWv7OGFGos8/exec';
+
+/* ----------------------------- i18n ------------------------ */
+const T = {
+  en: {
+    title:"Let's talk!", sub:'Grab 15 minutes with our team — good things start here',
+    detailsTitle:'Your details', doneHead:'All set', doneSub:'We look forward to speaking with you',
+    callWith:'Call with', meta:m=>m+'-minute video call · Google Meet',
+    lblDate:'Choose a date', lblTime:'Choose a time',
+    selectTime:'Select a time',
+    loading:'Loading availability…',
+    empty:n=>'No times available in the next '+n+' days. Please contact your representative directly.',
+    fn:'First name', ln:'Last name', ph:'Phone number', em:'Email',
+    back:'Back', confirm:'Confirm booking', booking:'Booking…',
+    doneTitle:'Your call is booked',
+    doneText:(m,r,w)=>'Your '+m+'-minute call with '+r+' is confirmed for '+w+'.',
+    addCal:'Add to Google Calendar',
+    calEvent:'Sales Call — NAGHI',
+    doneNote:'A calendar invitation with the Google Meet link has been sent to your email.',
+    fatalTitle:'Scheduling unavailable',
+    errFields:'Please fill in all fields.', errEmail:'Please enter a valid email address.',
+    errNet:'Could not reach the scheduling service. Please try again.',
+    errLink:'This link is missing a representative code. Please use the link your sales representative sent you.',
+    locale:'en-GB'
+  },
+  ar: {
+    title:'خلّنا نتكلم!', sub:'١٥ دقيقة مع فريقنا — اختر وقتك والباقي علينا',
+    detailsTitle:'بياناتك', doneHead:'تم بنجاح', doneSub:'نتطلع للتحدث معك',
+    callWith:'مكالمة مع', meta:m=>'مكالمة فيديو لمدة '+m+' دقيقة · Google Meet',
+    lblDate:'اختر التاريخ', lblTime:'اختر الوقت',
+    selectTime:'اختر الوقت',
+    loading:'جارٍ تحميل المواعيد…',
+    empty:n=>'لا توجد مواعيد متاحة خلال الـ '+n+' يومًا القادمة. يرجى التواصل مع مندوب المبيعات مباشرة.',
+    fn:'الاسم الأول', ln:'اسم العائلة', ph:'رقم الجوال', em:'البريد الإلكتروني',
+    back:'رجوع', confirm:'تأكيد الحجز', booking:'جارٍ الحجز…',
+    doneTitle:'تم حجز مكالمتك',
+    doneText:(m,r,w)=>'مكالمتك لمدة '+m+' دقيقة مع '+r+' مؤكدة يوم '+w+'.',
+    addCal:'أضِف إلى تقويم Google',
+    calEvent:'مكالمة مبيعات — NAGHI',
+    doneNote:'تم إرسال دعوة التقويم مع رابط Google Meet إلى بريدك الإلكتروني.',
+    fatalTitle:'الحجز غير متاح حاليًا',
+    errFields:'يرجى تعبئة جميع الحقول.', errEmail:'يرجى إدخال بريد إلكتروني صحيح.',
+    errNet:'تعذر الوصول إلى خدمة الحجز. يرجى المحاولة مرة أخرى.',
+    errLink:'هذا الرابط لا يحتوي على رمز المندوب. يرجى استخدام الرابط الذي أرسله لك مندوب المبيعات.',
+    locale:'ar-SA'
+  }
+};
+
+const REP_PHOTO_DEFAULT = 'data:image/jpeg;base64,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';
+const REP_PHOTOS = {
+  'hazim': REP_PHOTO_DEFAULT
+  // add more reps here: 'id': 'data:image/jpeg;base64,...'
+};
+
+const rep = new URLSearchParams(location.search).get('rep') || '';
+let lang = (new URLSearchParams(location.search).get('lang') === 'ar') ? 'ar' : 'en';
+let DATA = null, selDate = null, selSlot = null, step = 1, fatalMsg = null, booked = null;
+
+const $ = id => document.getElementById(id);
+const show = (id, on=true) => $(id).classList.toggle('hidden', !on);
+const t = () => T[lang];
+
+function fmtDate(iso, opts){
+  return new Intl.DateTimeFormat(t().locale + '-u-nu-latn',
+    Object.assign({ timeZone: (DATA && DATA.timezone) || 'Asia/Riyadh' }, opts)).format(new Date(iso));
+}
+
+function setStep(n){
+  step = n;
+  ['d1','d2','d3'].forEach((id,i) => $(id).classList.toggle('on', i === n-1));
+}
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  $('btnAr').classList.toggle('on', lang === 'ar');
+  $('btnEn').classList.toggle('on', lang === 'en');
+  const x = t();
+  $('lblDate').textContent = x.lblDate;
+  $('lblTime').textContent = x.lblTime;
+  $('loadingTxt') && ($('loadingTxt').textContent = x.loading);
+  $('lFn').textContent = x.fn; $('lLn').textContent = x.ln;
+  $('lPh').textContent = x.ph; $('lEm').textContent = x.em;
+  $('backBtn').textContent = x.back;
+  $('submitBtn').textContent = x.confirm;
+  $('calTxt').textContent = x.addCal;
+  $('doneTitle').textContent = x.doneTitle;
+  $('doneNote').textContent = x.doneNote;
+  $('fatalTitle').textContent = x.fatalTitle;
+  if (DATA){
+    $('repName').textContent = x.callWith + ' ' + DATA.repName;
+    $('metaLine').textContent = x.meta(DATA.slotMinutes);
+    renderDates();
+    if (selDate !== null) renderSlots();
+  }
+  refreshHead();
+  if (fatalMsg) $('fatalText').textContent = fatalMsg[lang] || fatalMsg.en;
+  if (booked) $('doneText').textContent =
+    x.doneText(DATA.slotMinutes, DATA.repName,
+      fmtDate(booked, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'}));
+}
+
+function refreshHead(){
+  const x = t();
+  if (step === 1){ $('headTitle').textContent = x.title; $('headSub').textContent = x.sub; }
+  else if (step === 2){
+    $('headTitle').textContent = x.detailsTitle;
+    $('headSub').textContent = selSlot
+      ? fmtDate(selSlot.iso, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'})
+      : x.sub;
+  } else { $('headTitle').textContent = x.doneHead; $('headSub').textContent = x.doneSub; }
+}
+
+$('btnAr').onclick = () => { lang = 'ar'; applyLang(); };
+$('btnEn').onclick = () => { lang = 'en'; applyLang(); };
+
+function fatal(msgEn, msgAr){
+  fatalMsg = { en: msgEn, ar: msgAr || msgEn };
+  show('stepPick', false); show('stepForm', false); show('stepDone', false);
+  $('fatalText').textContent = fatalMsg[lang]; show('fatal', true);
+}
+
+$('ph').addEventListener('focus', () => {
+  if (!$('ph').value.trim()) $('ph').value = '+966 5';
+});
+
+async function load(){
+  $('repPhoto').src = REP_PHOTOS[rep] || REP_PHOTO_DEFAULT;
+  if(!rep) return fatal(T.en.errLink, T.ar.errLink);
+  try{
+    const r = await fetch(SCRIPT_URL + '?action=availability&rep=' + encodeURIComponent(rep));
+    const d = await r.json();
+    if(!d.ok) return fatal(d.error || T.en.errNet, T.ar.errNet);
+    DATA = d;
+    applyLang();
+  }catch(e){
+    fatal(T.en.errNet, T.ar.errNet);
+  }
+}
+
+function renderDates(){
+  const wrap = $('dates'); wrap.innerHTML = '';
+  DATA.days.forEach((day, i) => {
+    const b = document.createElement('button');
+    b.className = 'date' + (i === selDate ? ' sel' : ''); b.type = 'button';
+    b.disabled = day.slots.length === 0;
+    const iso = day.date + 'T12:00:00';
+    b.innerHTML =
+      '<div class="dw">' + fmtDate(iso, {weekday:'short'}) + '</div>' +
+      '<div class="dn">' + fmtDate(iso, {day:'numeric'}) + '</div>' +
+      '<div class="dm">' + fmtDate(iso, {month:'short'}) + '</div>';
+    b.onclick = () => { selDate = i; selSlot = null; renderDates(); renderSlots(); };
+    wrap.appendChild(b);
+  });
+  if(!DATA.days.some(d => d.slots.length)){
+    wrap.innerHTML = '<div class="empty">' + t().empty(DATA.days.length) + '</div>';
+  }
+}
+
+function renderSlots(){
+  const sel = $('timeSel'); sel.innerHTML = '';
+  const ph = document.createElement('option');
+  ph.value = ''; ph.disabled = true; ph.selected = true;
+  ph.textContent = t().selectTime;
+  sel.appendChild(ph);
+  DATA.days[selDate].slots.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.iso;
+    o.textContent = fmtDate(s.iso, {hour:'numeric', minute:'2-digit'});
+    if (selSlot && selSlot.iso === s.iso) { o.selected = true; ph.selected = false; }
+    sel.appendChild(o);
+  });
+  show('slotArea', true);
+}
+
+$('timeSel').onchange = () => {
+  const iso = $('timeSel').value;
+  if (!iso) return;
+  selSlot = DATA.days[selDate].slots.find(s => s.iso === iso);
+  setStep(2); refreshHead();
+  show('stepPick', false); show('stepForm', true);
+};
+
+$('backBtn').onclick = () => {
+  show('stepForm', false); show('stepPick', true);
+  selSlot = null;
+  if (selDate !== null) renderSlots();
+  setStep(1); refreshHead();
+};
+
+$('form').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const x = t();
+  const fn = $('fn').value.trim(), ln = $('ln').value.trim(),
+        ph = $('ph').value.trim(), em = $('em').value.trim();
+  const err = $('formError');
+  err.classList.add('hidden');
+  if(!fn || !ln || !ph || !em){ err.textContent = x.errFields; err.classList.remove('hidden'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.textContent = x.errEmail; err.classList.remove('hidden'); return; }
+
+  const btn = $('submitBtn'); btn.disabled = true; btn.textContent = x.booking;
+  try{
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST',
+      body: JSON.stringify({ rep, start: selSlot.iso, firstName: fn, lastName: ln, phone: ph, email: em })
+    });
+    const d = await r.json();
+    if(!d.ok){
+      err.textContent = d.error || x.errNet;
+      err.classList.remove('hidden');
+      btn.disabled = false; btn.textContent = x.confirm;
+      if(/just booked/i.test(d.error||'')){
+        show('stepForm', false); show('stepPick', true); setStep(1); refreshHead(); load();
+      }
+      return;
+    }
+    booked = d.start;
+    setStep(3); refreshHead();
+    $('doneText').textContent = x.doneText(DATA.slotMinutes, DATA.repName,
+      fmtDate(booked, {weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit'}));
+    const cs = new Date(booked), ce = new Date(cs.getTime() + DATA.slotMinutes * 60000);
+    const gfmt = dd => dd.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+    $('calBtn').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent(x.calEvent)
+      + '&dates=' + gfmt(cs) + '/' + gfmt(ce)
+      + '&details=' + encodeURIComponent('Google Meet: ' + (d.meetLink || ''))
+      + '&location=' + encodeURIComponent(d.meetLink || '');
+    show('stepForm', false); show('stepDone', true);
+  }catch(e){
+    err.textContent = x.errNet;
+    err.classList.remove('hidden');
+    btn.disabled = false; btn.textContent = x.confirm;
+  }
+};
+
+applyLang();
+load();
+</script>
+</body>
+</html>
