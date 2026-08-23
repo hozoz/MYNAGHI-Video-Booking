@@ -144,8 +144,8 @@
       <span class="eyebrow">MY NAGHI</span>
       <span class="dots"><span class="dot on" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></span>
     </div>
-    <h1 id="headTitle">Book a sales call</h1>
-    <div class="sub" id="headSub">Pick a time that works best for you</div>
+    <h1 id="headTitle"></h1>
+    <div class="sub" id="headSub"></div>
     <div class="headrow">
       <div class="langs">
         <button type="button" class="lang" data-l="ar" id="btnAr">العربية</button>
@@ -161,11 +161,11 @@
         <div class="tile">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="m21.5 8-6 4 6 4V8Z"/></svg>
         </div>
-        <div class="txt"><span id="repName">Loading…</span><small id="metaLine">15-minute video call · Google Meet</small></div>
+        <div class="txt"><span id="repName">…</span><small id="metaLine"></small></div>
       </div>
 
-      <div class="label" id="lblDate">Choose a date</div>
-      <div class="dates" id="dates"><div class="loading" id="loadingTxt">Loading availability…</div></div>
+      <div class="label" id="lblDate"></div>
+      <div class="dates" id="dates"><div class="loading" id="loadingTxt"></div></div>
 
       <div id="slotArea" class="hidden">
         <div class="label"><span id="lblTime" style="font-weight:700;color:var(--ink)"></span> <span id="tzLabel"></span></div>
@@ -177,13 +177,13 @@
     <!-- STEP 2 -->
     <section id="stepForm" class="hidden">
       <form id="form" novalidate>
-        <div class="field"><label for="fn" id="lFn">First name</label><input id="fn" autocomplete="given-name" required></div>
-        <div class="field"><label for="ln" id="lLn">Last name</label><input id="ln" autocomplete="family-name" required></div>
-        <div class="field"><label for="ph" id="lPh">Phone number</label><input id="ph" type="tel" autocomplete="tel" required></div>
-        <div class="field"><label for="em" id="lEm">Email</label><input id="em" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="fn" id="lFn"></label><input id="fn" autocomplete="given-name" required></div>
+        <div class="field"><label for="ln" id="lLn"></label><input id="ln" autocomplete="family-name" required></div>
+        <div class="field"><label for="ph" id="lPh"></label><input id="ph" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="em" id="lEm"></label><input id="em" type="email" autocomplete="email" required></div>
         <div class="actions">
-          <button type="button" class="btn btn-ghost" id="backBtn">Back</button>
-          <button type="submit" class="btn btn-primary" id="submitBtn">Confirm booking</button>
+          <button type="button" class="btn btn-ghost" id="backBtn"></button>
+          <button type="submit" class="btn btn-primary" id="submitBtn"></button>
         </div>
       </form>
       <div class="error hidden" id="formError"></div>
@@ -194,26 +194,26 @@
       <div class="tile">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h2 id="doneTitle">Your call is booked</h2>
+      <h2 id="doneTitle"></h2>
       <p id="doneText"></p>
-      <a class="meetlink" id="meetLink" target="_blank" rel="noopener">Open Google Meet link</a>
-      <p class="note" id="doneNote">A calendar invitation with this link has also been sent to your email.</p>
+      <a class="meetlink" id="meetLink" target="_blank" rel="noopener"></a>
+      <p class="note" id="doneNote"></p>
     </section>
 
     <section id="fatal" class="done hidden">
-      <h2 id="fatalTitle">Scheduling unavailable</h2>
+      <h2 id="fatalTitle"></h2>
       <p id="fatalText"></p>
     </section>
   </div>
 
-  <div class="foot" id="footTxt">Your booking goes directly to the NAGHI team</div>
+  <div class="foot" id="footTxt"></div>
 </div>
 
 <script>
 /* ============================================================
    CONFIG — paste your Apps Script Web App URL here after deploy
    ============================================================ */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyt7kZilBnqrKvup_iMujYWYyZczKgoNCqxsMqTnEcCjAsKK3kdjOpjGRq_7IsYLAjT/exec';
+const SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbyt7kZilBnqrKvup_iMujYWYyZczKgoNCqxsMqTnEcCjAsKK3kdjOpjGRq_7IsYLAjT/exec’;
 
 /* ----------------------------- i18n ------------------------ */
 const T = {
